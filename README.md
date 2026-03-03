@@ -23,7 +23,3 @@ PackName_Origin_BPM_Instrument_Category_Key_Descriptors.wav
 - BPM is required for Loops, optional for One-Shots
 - Key is optional for Drums/Cymbals/Percussion
 - At least one descriptor is recommended
-
-### Valid Instruments
-
-Drums, Cymbals, Percussion, Bass, Synth, Keys, Guitar, Strings, Brass, FX, Vocals, Woodwinds
