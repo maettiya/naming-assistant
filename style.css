@@ -16,7 +16,7 @@
   --input-bg: #0a0a0a;
   --input-border: #333333;
   --white: #FFFFFF;
-  --dim: #666666;
+  --dim: #cccccc;
   --accent: #FF6B2B;
   --red: #FF3B3B;
   --green: #4ADE80;
@@ -30,7 +30,7 @@ html {
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 15px;
+  font-size: 50px;
   line-height: 1.5;
   -webkit-font-smoothing: antialiased;
 }
@@ -50,9 +50,9 @@ body {
 
 .logo {
   font-family: var(--font-heading);
-  font-size: 42px;
+  font-size: 90px;
   letter-spacing: 2px;
-  line-height: 1;
+  line-height: 0.65;
   font-weight: 400;
 }
 
@@ -63,7 +63,7 @@ body {
 .subtitle {
   margin-top: 8px;
   color: var(--dim);
-  font-size: 14px;
+  font-size: 20px;
 }
 
 /* ---- LAYOUT ---- */
@@ -75,7 +75,7 @@ main {
 }
 
 .section {
-  margin-top: 40px;
+  margin-top: 10px;
 }
 
 .section:first-child {
@@ -84,17 +84,17 @@ main {
 
 .section-label {
   font-family: var(--font-heading);
-  font-size: 14px;
+  font-size: 45px;
   letter-spacing: 3px;
   color: var(--dim);
-  margin-bottom: 16px;
+  margin-bottom: 10px;
   font-weight: 400;
 }
 
 .section-label-sub {
-  font-size: 11px;
+  font-size: 30px;
   letter-spacing: 1px;
-  color: #444;
+  color: #888;
   margin-left: 8px;
 }
 
@@ -108,16 +108,18 @@ main {
 }
 
 .tab {
+  flex: 1;
   font-family: var(--font-heading);
-  font-size: 14px;
+  font-size: 30px;
   letter-spacing: 2px;
-  padding: 12px 20px;
+  padding: 0px 20px;
   background: none;
   border: none;
   border-bottom: 2px solid transparent;
   color: var(--dim);
   cursor: pointer;
   transition: all 0.15s;
+  text-align: center;
 }
 
 .tab:hover {
@@ -148,7 +150,7 @@ main {
 .field label {
   display: block;
   font-family: var(--font-heading);
-  font-size: 13px;
+  font-size: 30px;
   letter-spacing: 2px;
   color: var(--dim);
   margin-bottom: 6px;
@@ -161,7 +163,7 @@ main {
 
 .opt {
   color: var(--amber);
-  font-size: 10px;
+  font-size: 20px;
 }
 
 .field input[type="text"],
@@ -172,7 +174,7 @@ main {
   padding: 10px 12px;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  border-radius: 0;
+  border-radius: 4px;
   color: var(--white);
   font-family: var(--font-body);
   font-size: 14px;
@@ -218,18 +220,22 @@ main {
 .format-preview {
   background: var(--card);
   border: 1px solid var(--border);
-  padding: 16px 20px;
+  border-radius: 4px;
+  padding: 32px 24px;
   font-family: var(--font-mono);
-  font-size: 12px;
+  font-size: 14px;
   color: var(--dim);
-  margin-bottom: 12px;
-  line-height: 2;
+  margin-bottom: 16px;
+  line-height: 2.4;
+  text-align: center;
 }
 
 .seg {
   display: inline-block;
-  padding: 2px 6px;
-  font-size: 11px;
+  padding: 6px 12px;
+  font-size: 16px;
+  font-weight: 500;
+  border-radius: 4px;
 }
 
 .seg-required {
@@ -245,13 +251,15 @@ main {
 }
 
 .seg-sep {
-  color: #444;
+  color: #888;
+  font-size: 18px;
 }
 
 .format-legend {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .hint-dot {
@@ -275,6 +283,7 @@ main {
 .tags-area {
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 4px;
   padding: 16px;
 }
 
@@ -316,7 +325,7 @@ main {
   font-family: var(--font-heading);
   font-size: 11px;
   letter-spacing: 2px;
-  color: #444;
+  color: #888;
   margin-top: 8px;
   margin-bottom: 2px;
   text-transform: uppercase;
@@ -331,6 +340,7 @@ main {
   font-size: 11px;
   padding: 4px 10px;
   border: 1px solid var(--input-border);
+  border-radius: 4px;
   background: transparent;
   color: var(--dim);
   cursor: pointer;
@@ -356,6 +366,7 @@ main {
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 4px 10px;
+  border-radius: 4px;
   background: rgba(255, 107, 43, 0.1);
   border: 1px solid var(--accent);
   color: var(--accent);
@@ -377,6 +388,7 @@ main {
 .builder-output-box {
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 4px;
   padding: 16px 20px;
   position: relative;
 }
@@ -426,6 +438,7 @@ main {
   font-family: var(--font-mono);
   font-size: 11px;
   padding: 6px 10px;
+  border-radius: 4px;
 }
 
 .validation-item.ok {
@@ -456,6 +469,7 @@ main {
   letter-spacing: 2px;
   padding: 10px 20px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
   transition: opacity 0.15s;
   text-transform: uppercase;
@@ -501,6 +515,7 @@ main {
   padding: 6px 14px;
   background: transparent;
   border: 1px solid var(--input-border);
+  border-radius: 4px;
   color: var(--white);
   cursor: pointer;
   white-space: nowrap;
@@ -525,6 +540,7 @@ main {
 
 .drop-zone {
   border: 2px dashed var(--input-border);
+  border-radius: 4px;
   padding: 56px 32px;
   text-align: center;
   cursor: pointer;
@@ -585,6 +601,7 @@ main {
 .file-row {
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 4px;
   padding: 20px 24px;
   margin-bottom: 8px;
 }
@@ -656,6 +673,7 @@ main {
   padding: 10px 14px;
   background: var(--black);
   border: 1px solid var(--border);
+  border-radius: 4px;
 }
 
 .file-row-output.has-duplicate {
@@ -714,7 +732,7 @@ main {
   padding: 14px;
   background: var(--input-bg);
   border: 1px solid var(--input-border);
-  border-radius: 0;
+  border-radius: 4px;
   color: var(--white);
   font-family: var(--font-mono);
   font-size: 12px;
@@ -742,6 +760,7 @@ main {
   padding: 10px 12px;
   background: var(--card);
   border: 1px solid var(--border);
+  border-radius: 4px;
   font-family: var(--font-mono);
   font-size: 11px;
 }

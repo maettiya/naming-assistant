@@ -13,7 +13,7 @@
 
   <header class="site-header">
     <h1 class="logo">TRACKLIB <span class="logo-accent">NAMING ASSISTANT</span></h1>
-    <p class="subtitle">Supplier filename tool — get your pack names right the first time.</p>
+    <p class="subtitle">Supplier naming convention tool.</p>
   </header>
 
   <main>
@@ -37,8 +37,7 @@
         </div>
         <div class="format-legend">
           <span class="hint"><span class="hint-dot hint-dot-required"></span> Required</span>
-          <span class="hint"><span class="hint-dot hint-dot-optional"></span> Optional (see rules)</span>
-          <span class="hint">Tempo optional for one-shots — Key optional for drums/perc</span>
+          <span class="hint"><span class="hint-dot hint-dot-optional"></span> Optional = Tempo is optional for one-shots.  Key is optional for drums/percussion</span>
         </div>
       </section>
 
@@ -82,7 +81,7 @@
             </select>
           </div>
           <div class="field">
-            <label>TEMPO (BPM) <span class="opt">OPT</span></label>
+            <label>TEMPO (BPM) <span class="opt">OPTIONAL</span></label>
             <input type="number" id="b-bpm" placeholder="e.g. 120" min="40" max="300">
             <span class="hint">Numbers only — no "bpm" suffix</span>
           </div>
@@ -90,7 +89,7 @@
         <div class="divider"></div>
         <div class="grid-2">
           <div class="field">
-            <label>KEY <span class="opt">OPT</span></label>
+            <label>KEY <span class="opt">OPTIONAL</span></label>
             <select id="b-key">
               <option value="">— none —</option>
               <option>A</option><option>Am</option><option>A#</option><option>A#m</option>
@@ -106,7 +105,7 @@
             <span class="hint">e.g. Am — C# — Dbm (no "maj"/"min")</span>
           </div>
           <div class="field">
-            <label>CUSTOM DESCRIPTOR <span class="opt">OPT</span></label>
+            <label>CUSTOM DESCRIPTOR <span class="opt">OPTIONAL</span></label>
             <input type="text" id="b-custom-desc" placeholder="e.g. bright_warm">
             <span class="hint">Separate multiple with underscores</span>
           </div>
