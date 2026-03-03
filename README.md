@@ -27,27 +27,3 @@ PackName_Origin_BPM_Instrument_Category_Key_Descriptors.wav
 ### Valid Instruments
 
 Drums, Cymbals, Percussion, Bass, Synth, Keys, Guitar, Strings, Brass, FX, Vocals, Woodwinds
-
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-# DELETE ALL OF THIS FROM HERE BEFORE YOU DEPLOY LIVE AND SEND #
-
-## Deploy to Cloudflare Pages
-
-1. Push this repo to GitHub
-2. Go to [Cloudflare Pages](https://pages.cloudflare.com/)
-3. Click **Create a project** → **Connect to Git**
-4. Select your GitHub repository
-5. Configure the build:
-   - **Framework preset**: None
-   - **Build command**: _(leave empty)_
-   - **Build output directory**: `/`
-6. Click **Save and Deploy**
-
-That's it. No build step, no framework, no config. Cloudflare serves the static files directly.
-
-Every push to `main` triggers a new deployment automatically.
