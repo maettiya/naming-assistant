@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tracklib Naming Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <header class="site-header">
+    <h1 class="logo">TRACKLIB <span class="logo-accent">NAMING ASSISTANT</span></h1>
+    <p class="subtitle">Supplier filename tool — get your pack names right the first time.</p>
+  </header>
+
+  <main>
+
+    <!-- PACK SETTINGS -->
+    <section class="section" id="pack-settings">
+      <h2 class="section-label">PACK SETTINGS</h2>
+      <div class="pack-fields">
+        <div class="field">
+          <label for="pack-name">Pack Name</label>
+          <input type="text" id="pack-name" placeholder="e.g. Sunset Funk Vol 2">
+        </div>
+        <div class="field">
+          <label for="origin">Origin</label>
+          <input type="text" id="origin" placeholder="e.g. DJ Shadow or Blue Note">
+        </div>
+      </div>
+    </section>
+
+    <!-- DROP ZONE -->
+    <section class="section" id="drop-section">
+      <h2 class="section-label">DROP FILES</h2>
+      <div class="drop-zone" id="drop-zone">
+        <div class="drop-zone-content">
+          <div class="drop-icon">↓</div>
+          <p class="drop-text">Drag &amp; drop .wav files here</p>
+          <p class="drop-sub">or <button type="button" class="browse-link" id="browse-btn">browse files</button></p>
+        </div>
+        <input type="file" id="file-input" accept=".wav" multiple hidden>
+      </div>
+    </section>
+
+    <!-- FILE ROWS -->
+    <section class="section" id="files-section" hidden>
+      <div class="files-header">
+        <h2 class="section-label">FILES</h2>
+        <button type="button" class="btn btn-ghost" id="clear-all-btn">CLEAR ALL</button>
+      </div>
+      <div id="file-rows"></div>
+    </section>
+
+  </main>
+
+  <!-- COMPLIANCE BAR -->
+  <footer class="compliance-bar" id="compliance-bar" hidden>
+    <div class="compliance-inner">
+      <span class="compliance-item ready" id="stat-ready">0 files ready</span>
+      <span class="compliance-item errors" id="stat-errors">0 missing fields</span>
+      <span class="compliance-item duplicates" id="stat-duplicates">0 duplicates</span>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
