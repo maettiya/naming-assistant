@@ -30,8 +30,8 @@ html {
   background: var(--black);
   color: var(--white);
   font-family: var(--font-body);
-  font-size: 50px;
-  line-height: 1.5;
+  font-size: 20px;
+  line-height: 1.2;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -61,7 +61,7 @@ body {
 }
 
 .subtitle {
-  margin-top: 8px;
+  margin-top: 2px;
   color: var(--dim);
   font-size: 20px;
 }
@@ -71,28 +71,41 @@ body {
 main {
   max-width: 1100px;
   margin: 0 auto;
-  padding: 0 32px 48px;
+  padding: 0 0px 0px;
 }
 
 .section {
-  margin-top: 10px;
+  margin-top: 40px;
 }
 
 .section:first-child {
-  margin-top: 0;
+  margin-top: 2px;
 }
 
 .section-label {
   font-family: var(--font-heading);
-  font-size: 45px;
+  font-size: 20px;
   letter-spacing: 3px;
-  color: var(--dim);
-  margin-bottom: 10px;
+  color: var(--accent);
+  opacity: 0.6;
+  margin-bottom: 4px;
   font-weight: 400;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.section-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--accent);
+  opacity: 0.4;
 }
 
 .section-label-sub {
-  font-size: 30px;
+  font-size: 20px;
   letter-spacing: 1px;
   color: #888;
   margin-left: 8px;
@@ -103,7 +116,7 @@ main {
 .tabs {
   display: flex;
   gap: 0;
-  margin-bottom: 32px;
+  margin-bottom: 20px;
   border-bottom: 1px solid var(--border);
 }
 
@@ -199,14 +212,14 @@ main {
 }
 
 .hint {
-  font-size: 12px;
+  font-size: 16px;
   color: var(--dim);
-  margin-top: 4px;
+  margin-top: 0px;
 }
 
 .hint-block {
-  line-height: 1.7;
-  margin-bottom: 16px;
+  line-height: 1;
+  margin-bottom: 20px;
 }
 
 .divider {
@@ -221,19 +234,19 @@ main {
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 4px;
-  padding: 32px 24px;
+  padding: 8px 24px;
   font-family: var(--font-mono);
   font-size: 14px;
   color: var(--dim);
   margin-bottom: 16px;
-  line-height: 2.4;
+  line-height: 1.6;
   text-align: center;
 }
 
 .seg {
   display: inline-block;
-  padding: 6px 12px;
-  font-size: 16px;
+  padding: 0px 12px;
+  font-size: 18px;
   font-weight: 500;
   border-radius: 4px;
 }
@@ -253,6 +266,21 @@ main {
 .seg-sep {
   color: #888;
   font-size: 18px;
+}
+
+.format-example {
+  font-family: var(--font-body);
+  font-size: 18px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+.seg-required-text {
+  color: var(--accent);
+}
+
+.seg-optional-text {
+  color: var(--amber);
 }
 
 .format-legend {
