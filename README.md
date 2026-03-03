@@ -1,16 +1,16 @@
 # Tracklib Naming Assistant
 
-A static web tool for Tracklib suppliers to generate compliant pack filenames. Drop your `.wav` files, fill in the metadata, and get correctly formatted filenames — no guessing, no mistakes.
+A static web tool for Tracklib Sounds suppliers to generate compliant pack filenames.
 
-Built by a Tracklib supplier who got tired of renaming files by hand and second-guessing the format.
+Built by a Tracklib supplier who got tired of manually re-naming files.
 
 ## What It Does
 
-- **Drag & drop** `.wav` files — filenames are parsed for BPM, key, instrument, and category automatically
+- **Drag & drop** `.wav` files — filenames are parsed for BPM, key, instrument, and category
 - **Inline editing** — fix or fill in any field the parser couldn't detect
 - **Live filename generation** — see the Tracklib-compliant filename update as you type
 - **Duplicate detection** — flags any rows that would produce identical filenames
-- **One-click copy** — copies the filename (without `.wav`) straight to your clipboard for pasting into Finder/Explorer rename
+- **One-click copy** — copies the filename (without `.wav`) straight to your clipboard for pasting to rename
 
 ## Naming Format
 
@@ -43,11 +43,3 @@ Drums, Cymbals, Percussion, Bass, Synth, Keys, Guitar, Strings, Brass, FX, Vocal
 That's it. No build step, no framework, no config. Cloudflare serves the static files directly.
 
 Every push to `main` triggers a new deployment automatically.
-
-## Tech
-
-Three files. No frameworks. No build step. Pure vanilla HTML, CSS, and JavaScript.
-
-- `index.html` — structure
-- `style.css` — Tracklib-inspired design (Bebas Neue, DM Mono, flat black)
-- `app.js` — all logic: parsing, validation, duplicate checking, clipboard
