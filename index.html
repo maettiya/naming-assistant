@@ -18,46 +18,215 @@
 
   <main>
 
-    <!-- PACK SETTINGS -->
-    <section class="section" id="pack-settings">
-      <h2 class="section-label">PACK SETTINGS</h2>
-      <div class="pack-fields">
-        <div class="field">
-          <label for="pack-name">Pack Name</label>
-          <input type="text" id="pack-name" placeholder="e.g. Sunset Funk Vol 2">
-        </div>
-        <div class="field">
-          <label for="origin">Origin</label>
-          <input type="text" id="origin" placeholder="e.g. DJ Shadow or Blue Note">
-        </div>
-      </div>
-    </section>
+    <!-- Mode tabs -->
+    <div class="tabs" id="mode-tabs">
+      <button class="tab active" data-mode="builder">SINGLE BUILDER</button>
+      <button class="tab" data-mode="filedrop">FILE DROP</button>
+      <button class="tab" data-mode="bulk">BULK RENAMER</button>
+      <button class="tab" data-mode="validate">VALIDATOR</button>
+    </div>
 
-    <!-- DROP ZONE -->
-    <section class="section" id="drop-section">
-      <h2 class="section-label">DROP FILES</h2>
-      <div class="drop-zone" id="drop-zone">
-        <div class="drop-zone-content">
-          <div class="drop-icon">↓</div>
-          <p class="drop-text">Drag &amp; drop .wav files here</p>
-          <p class="drop-sub">or <button type="button" class="browse-link" id="browse-btn">browse files</button></p>
-        </div>
-        <input type="file" id="file-input" accept=".wav" multiple hidden>
-      </div>
-    </section>
+    <!-- ======== SINGLE BUILDER MODE ======== -->
+    <div id="mode-builder">
 
-    <!-- FILE ROWS -->
-    <section class="section" id="files-section" hidden>
-      <div class="files-header">
-        <h2 class="section-label">FILES</h2>
-        <button type="button" class="btn btn-ghost" id="clear-all-btn">CLEAR ALL</button>
-      </div>
-      <div id="file-rows"></div>
-    </section>
+      <!-- Format reference -->
+      <section class="section">
+        <h2 class="section-label">NAMING FORMAT</h2>
+        <div class="format-preview">
+          <span class="seg seg-required">PACK NAME</span><span class="seg-sep">_</span><span class="seg seg-required">ORIGIN</span><span class="seg-sep">_</span><span class="seg seg-optional">TEMPO</span><span class="seg-sep">_</span><span class="seg seg-required">INSTRUMENT</span><span class="seg-sep">_</span><span class="seg seg-required">CATEGORY</span><span class="seg-sep">_</span><span class="seg seg-optional">KEY</span><span class="seg-sep">_</span><span class="seg seg-required">DESCRIPTORS</span><span class="seg-sep">.wav</span>
+        </div>
+        <div class="format-legend">
+          <span class="hint"><span class="hint-dot hint-dot-required"></span> Required</span>
+          <span class="hint"><span class="hint-dot hint-dot-optional"></span> Optional (see rules)</span>
+          <span class="hint">Tempo optional for one-shots — Key optional for drums/perc</span>
+        </div>
+      </section>
+
+      <!-- Pack info -->
+      <section class="section">
+        <h2 class="section-label">PACK INFO</h2>
+        <div class="grid-2">
+          <div class="field">
+            <label>PACK NAME <span class="req">*</span></label>
+            <input type="text" id="b-pack-name" placeholder="e.g. The Recipe Volume 2">
+            <span class="hint">No underscores in the name itself</span>
+          </div>
+          <div class="field">
+            <label>ORIGIN (LABEL / PRODUCER) <span class="req">*</span></label>
+            <input type="text" id="b-origin" placeholder="e.g. The Sample Lab">
+            <span class="hint">Same for every sound in the pack</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sound details -->
+      <section class="section">
+        <h2 class="section-label">SOUND DETAILS</h2>
+        <div class="grid-3">
+          <div class="field">
+            <label>INSTRUMENT <span class="req">*</span></label>
+            <select id="b-instrument">
+              <option value="">—</option>
+              <option>Drums</option><option>Cymbals</option><option>Percussion</option>
+              <option>Bass</option><option>Synth</option><option>Keys</option>
+              <option>Guitar</option><option>Strings</option><option>Brass</option>
+              <option>FX</option><option>Vocals</option><option>Woodwinds</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>CATEGORY <span class="req">*</span></label>
+            <select id="b-category">
+              <option value="">—</option>
+              <option value="loop">Loop</option>
+              <option value="one-shot">One-Shot</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>TEMPO (BPM) <span class="opt">OPT</span></label>
+            <input type="number" id="b-bpm" placeholder="e.g. 120" min="40" max="300">
+            <span class="hint">Numbers only — no "bpm" suffix</span>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="grid-2">
+          <div class="field">
+            <label>KEY <span class="opt">OPT</span></label>
+            <select id="b-key">
+              <option value="">— none —</option>
+              <option>A</option><option>Am</option><option>A#</option><option>A#m</option>
+              <option>Bb</option><option>Bbm</option><option>B</option><option>Bm</option>
+              <option>C</option><option>Cm</option><option>C#</option><option>C#m</option>
+              <option>Db</option><option>Dbm</option><option>D</option><option>Dm</option>
+              <option>D#</option><option>D#m</option><option>Eb</option><option>Ebm</option>
+              <option>E</option><option>Em</option><option>F</option><option>Fm</option>
+              <option>F#</option><option>F#m</option><option>Gb</option><option>Gbm</option>
+              <option>G</option><option>Gm</option><option>G#</option><option>G#m</option>
+              <option>Ab</option><option>Abm</option>
+            </select>
+            <span class="hint">e.g. Am — C# — Dbm (no "maj"/"min")</span>
+          </div>
+          <div class="field">
+            <label>CUSTOM DESCRIPTOR <span class="opt">OPT</span></label>
+            <input type="text" id="b-custom-desc" placeholder="e.g. bright_warm">
+            <span class="hint">Separate multiple with underscores</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Descriptors -->
+      <section class="section">
+        <h2 class="section-label">DESCRIPTORS <span class="section-label-sub">click to add</span></h2>
+        <div class="tags-area">
+          <div class="selected-tags" id="b-selected-tags">
+            <span class="empty-hint">No descriptors selected yet...</span>
+          </div>
+          <div class="chip-group" id="b-descriptor-cloud"></div>
+        </div>
+      </section>
+
+      <!-- Output -->
+      <section class="section">
+        <h2 class="section-label">GENERATED FILENAME</h2>
+        <div class="builder-output-box">
+          <div class="builder-output-label">OUTPUT</div>
+          <div class="output-filename builder-output-filename empty" id="b-output">Fill in the fields above to generate your filename...</div>
+          <button type="button" class="btn-copy" id="b-copy-btn">COPY</button>
+        </div>
+        <div class="validation-list" id="b-validation"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="b-copy-large">COPY FILENAME</button>
+          <button type="button" class="btn btn-ghost" id="b-reset">RESET</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ======== FILE DROP MODE ======== -->
+    <div id="mode-filedrop" style="display:none">
+
+      <section class="section">
+        <h2 class="section-label">PACK SETTINGS</h2>
+        <div class="grid-2">
+          <div class="field">
+            <label>PACK NAME <span class="req">*</span></label>
+            <input type="text" id="fd-pack-name" placeholder="e.g. Sunset Funk Vol 2">
+          </div>
+          <div class="field">
+            <label>ORIGIN <span class="req">*</span></label>
+            <input type="text" id="fd-origin" placeholder="e.g. DJ Shadow or Blue Note">
+          </div>
+        </div>
+      </section>
+
+      <section class="section">
+        <h2 class="section-label">DROP FILES</h2>
+        <div class="drop-zone" id="drop-zone">
+          <div class="drop-zone-content">
+            <div class="drop-icon">↓</div>
+            <p class="drop-text">Drag & drop .wav files here</p>
+            <p class="drop-sub">or <button type="button" class="browse-link" id="browse-btn">browse files</button></p>
+          </div>
+          <input type="file" id="file-input" accept=".wav" multiple hidden>
+        </div>
+      </section>
+
+      <section class="section" id="fd-files-section" hidden>
+        <div class="files-header">
+          <h2 class="section-label">FILES</h2>
+          <button type="button" class="btn btn-ghost" id="fd-clear-all">CLEAR ALL</button>
+        </div>
+        <div id="fd-file-rows"></div>
+      </section>
+
+    </div>
+
+    <!-- ======== BULK RENAMER MODE ======== -->
+    <div id="mode-bulk" style="display:none">
+
+      <section class="section">
+        <h2 class="section-label">BULK RENAME</h2>
+        <p class="hint hint-block">Paste your existing filenames (one per line). Set the pack name and origin, and the tool will detect metadata and rebuild each filename to Tracklib spec.</p>
+        <div class="grid-2">
+          <div class="field">
+            <label>PACK NAME <span class="req">*</span></label>
+            <input type="text" id="bulk-pack" placeholder="e.g. My Sample Pack">
+          </div>
+          <div class="field">
+            <label>ORIGIN <span class="req">*</span></label>
+            <input type="text" id="bulk-origin" placeholder="e.g. My Label">
+          </div>
+        </div>
+        <div class="field" style="margin-top:16px">
+          <label>PASTE FILENAMES</label>
+          <textarea class="bulk-input" id="bulk-input" placeholder="kick_120_hard.wav&#10;piano loop Am 90bpm.wav&#10;drums_snare_oneshot.wav"></textarea>
+        </div>
+        <div id="bulk-results" class="bulk-results"></div>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" id="bulk-copy">COPY ALL RENAMED</button>
+          <button type="button" class="btn btn-ghost" id="bulk-clear">CLEAR</button>
+        </div>
+      </section>
+
+    </div>
+
+    <!-- ======== VALIDATOR MODE ======== -->
+    <div id="mode-validate" style="display:none">
+
+      <section class="section">
+        <h2 class="section-label">VALIDATE FILENAME</h2>
+        <p class="hint hint-block">Paste a filename to check it against Tracklib's submission guidelines.</p>
+        <div class="field">
+          <label>FILENAME TO VALIDATE</label>
+          <input type="text" id="validate-input" placeholder="MyPack_MyLabel_120_Synth_Loop_Am_warm_analog.wav">
+        </div>
+        <div class="validation-list" id="validate-results"></div>
+      </section>
+
+    </div>
 
   </main>
 
-  <!-- COMPLIANCE BAR -->
+  <!-- COMPLIANCE BAR (file drop mode) -->
   <footer class="compliance-bar" id="compliance-bar" hidden>
     <div class="compliance-inner">
       <span class="compliance-item ready" id="stat-ready">0 files ready</span>
