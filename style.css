@@ -807,7 +807,7 @@ main {
 
 .bulk-row {
   display: grid;
-  grid-template-columns: 1fr 20px 1fr;
+  grid-template-columns: 1fr 20px 1fr auto;
   gap: 8px;
   align-items: center;
   padding: 10px 12px;
@@ -839,6 +839,30 @@ main {
 
 .bulk-row .renamed.error {
   color: var(--red);
+}
+
+.bulk-copy-btn {
+  padding: 4px 12px;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 3px;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: background 0.15s, color 0.15s;
+}
+.bulk-copy-btn:hover {
+  background: var(--accent);
+  color: var(--bg);
+}
+.bulk-copy-btn.copied {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--bg);
 }
 
 /* ---- COMPLIANCE BAR ---- */

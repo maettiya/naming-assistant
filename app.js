@@ -789,7 +789,6 @@ const bulkPack = document.getElementById('bulk-pack');
 const bulkOrigin = document.getElementById('bulk-origin');
 const bulkInput = document.getElementById('bulk-input');
 const bulkResults = document.getElementById('bulk-results');
-const bulkCopy = document.getElementById('bulk-copy');
 const bulkClear = document.getElementById('bulk-clear');
 
 function runBulk() {
@@ -807,8 +806,20 @@ function runBulk() {
       <div class="original">${original}</div>
       <div class="arrow">→</div>
       <div class="renamed ${hasError ? 'error' : ''}">${renamed}</div>
+      ${hasError ? '' : '<button type="button" class="btn-copy bulk-copy-btn">COPY</button>'}
     </div>`;
   }).join('');
+
+  bulkResults.querySelectorAll('.bulk-copy-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const renamed = btn.closest('.bulk-row').querySelector('.renamed').textContent.replace(/\.wav$/, '');
+      navigator.clipboard.writeText(renamed).then(() => {
+        btn.textContent = 'COPIED';
+        btn.classList.add('copied');
+        setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 1500);
+      });
+    });
+  });
 }
 
 function bulkAttemptRename(filename, pack, origin) {
@@ -860,11 +871,6 @@ bulkPack.addEventListener('input', runBulk);
 bulkOrigin.addEventListener('input', runBulk);
 bulkInput.addEventListener('input', runBulk);
 bulkClear.addEventListener('click', () => { bulkInput.value = ''; bulkResults.innerHTML = ''; });
-bulkCopy.addEventListener('click', () => {
-  const rows = bulkResults.querySelectorAll('.renamed:not(.error)');
-  const lines = [...rows].map(r => r.textContent).join('\n');
-  if (lines) navigator.clipboard.writeText(lines);
-});
 
 
 // ============================================================
