@@ -205,7 +205,7 @@ function builderBuildFilename() {
       if (clean && !allDescs.includes(clean)) allDescs.push(clean);
     });
   }
-  if (allDescs.length) parts.push(allDescs.join('-'));
+  allDescs.forEach(d => parts.push(d));
 
   return parts.join('_') + '.wav';
 }
@@ -440,11 +440,10 @@ function fdGenerateFilename(fileState) {
   const instrument = fileState.instrument || '';
   const category = fileState.category || '';
   const key = fileState.key || fdKey.value || '';
-  const descriptors = (fileState.descriptors || []).join('-');
+  const parts = [packName, origin, bpm, instrument, category, key].filter(s => s.length > 0);
+  (fileState.descriptors || []).forEach(d => parts.push(d));
 
-  return [packName, origin, bpm, instrument, category, key, descriptors]
-    .filter(s => s.length > 0)
-    .join('_') + '.wav';
+  return parts.join('_') + '.wav';
 }
 
 function fdValidateFile(fileState) {
@@ -857,7 +856,7 @@ function bulkGenerateFilename(file) {
   parts.push(file.instrument.toLowerCase());
   parts.push(file.category);
   if (file.key) parts.push(file.key);
-  if (file.descriptors.length > 0) parts.push(file.descriptors.join('-'));
+  file.descriptors.forEach(d => parts.push(d));
 
   return parts.join('_') + '.wav';
 }
