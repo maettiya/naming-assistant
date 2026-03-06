@@ -420,6 +420,8 @@ let fdIdCounter = 0;
 
 const fdPackName = document.getElementById('fd-pack-name');
 const fdOrigin = document.getElementById('fd-origin');
+const fdBpm = document.getElementById('fd-bpm');
+const fdKey = document.getElementById('fd-key');
 const dropZone = document.getElementById('drop-zone');
 const fileInput = document.getElementById('file-input');
 const browseBtn = document.getElementById('browse-btn');
@@ -434,10 +436,10 @@ const statDuplicates = document.getElementById('stat-duplicates');
 function fdGenerateFilename(fileState) {
   const packName = sanitize(fdPackName.value.trim());
   const origin = sanitize(fdOrigin.value.trim());
-  const bpm = fileState.bpm || '';
+  const bpm = fileState.bpm || fdBpm.value.trim() || '';
   const instrument = fileState.instrument || '';
   const category = fileState.category || '';
-  const key = fileState.key || '';
+  const key = fileState.key || fdKey.value || '';
   const descriptors = (fileState.descriptors || []).join('-');
 
   return [packName, origin, bpm, instrument, category, key, descriptors]
@@ -451,7 +453,7 @@ function fdValidateFile(fileState) {
   if (!fdOrigin.value.trim()) errors.push('Origin');
   if (!fileState.instrument) errors.push('Instrument');
   if (!fileState.category) errors.push('Category');
-  if (fileState.category === 'Loop' && !fileState.bpm) errors.push('BPM (required for loops)');
+  if (fileState.category === 'Loop' && !fileState.bpm && !fdBpm.value.trim()) errors.push('BPM (required for loops)');
   return errors;
 }
 
@@ -466,6 +468,24 @@ function fdCheckDuplicates() {
     if (count > 1) dupes.add(name);
   }
   return dupes;
+}
+
+function fdSyncUniversalFields() {
+  const universalBpm = fdBpm.value.trim();
+  const universalKey = fdKey.value;
+  for (const f of fdFiles) {
+    const row = document.getElementById(`row-${f.id}`);
+    if (!row) continue;
+    const bpmInput = row.querySelector('.input-bpm');
+    const keySelect = row.querySelector('.input-key');
+    if (bpmInput && !f.bpm) {
+      bpmInput.value = universalBpm;
+      bpmInput.placeholder = universalBpm || '—';
+    }
+    if (keySelect && !f.key) {
+      keySelect.value = universalKey;
+    }
+  }
 }
 
 function fdRenderAll() {
@@ -596,8 +616,9 @@ function fdCreateFileRow(fileState) {
     `<option value="${i}" ${fileState.instrument === i ? 'selected' : ''}>${i}</option>`
   ).join('');
 
+  const effectiveKey = fileState.key || fdKey.value;
   const keyOptions = VALID_KEYS.map(k =>
-    `<option value="${k}" ${fileState.key === k ? 'selected' : ''}>${k}</option>`
+    `<option value="${k}" ${effectiveKey === k ? 'selected' : ''}>${k}</option>`
   ).join('');
 
   row.innerHTML = `
@@ -623,7 +644,7 @@ function fdCreateFileRow(fileState) {
       </div>
       <div class="field">
         <label>BPM</label>
-        <input type="number" class="input-bpm" min="40" max="300" value="${fileState.bpm}" placeholder="—">
+        <input type="number" class="input-bpm" min="40" max="300" value="${fileState.bpm || fdBpm.value.trim()}" placeholder="—">
       </div>
       <div class="field">
         <label>KEY</label>
@@ -672,11 +693,17 @@ function fdCreateFileRow(fileState) {
 
   bpmInput.addEventListener('input', () => {
     fileState.bpm = bpmInput.value;
+    if (!bpmInput.value && fdBpm.value.trim()) {
+      bpmInput.value = fdBpm.value.trim();
+    }
     fdRenderAll();
   });
 
   keySelect.addEventListener('change', () => {
     fileState.key = keySelect.value;
+    if (!keySelect.value && fdKey.value) {
+      keySelect.value = fdKey.value;
+    }
     fdRenderAll();
   });
 
@@ -737,6 +764,14 @@ browseBtn.addEventListener('click', e => { e.stopPropagation(); fileInput.click(
 fileInput.addEventListener('change', () => { fdHandleFiles(fileInput.files); fileInput.value = ''; });
 fdPackName.addEventListener('input', fdRenderAll);
 fdOrigin.addEventListener('input', fdRenderAll);
+fdBpm.addEventListener('input', () => {
+  fdSyncUniversalFields();
+  fdRenderAll();
+});
+fdKey.addEventListener('change', () => {
+  fdSyncUniversalFields();
+  fdRenderAll();
+});
 fdClearAll.addEventListener('click', () => {
   fdFiles = [];
   fdIdCounter = 0;

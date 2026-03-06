@@ -666,8 +666,8 @@ main {
 }
 
 .file-row-original {
-  font-family: var(--font-mono);
-  font-size: 12px;
+  font-family: var(--font-body);
+  font-size: 18px;
   color: var(--dim);
   margin-bottom: 14px;
   word-break: break-all;
