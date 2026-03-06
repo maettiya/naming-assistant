@@ -209,6 +209,29 @@ main {
   padding-right: 32px;
 }
 
+.input-with-suffix {
+  display: flex;
+  align-items: center;
+}
+
+.input-with-suffix input {
+  flex: 1;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.input-suffix {
+  font-family: var(--font-body);
+  font-size: 14px;
+  color: var(--dim);
+  background: var(--card);
+  border: 1px solid var(--input-border);
+  border-left: none;
+  border-radius: 0 4px 4px 0;
+  padding: 10px 12px;
+  line-height: 1.2;
+}
+
 .hint {
   font-size: 14px;
   color: var(--dim);
@@ -218,6 +241,7 @@ main {
 .hint-block {
   line-height: 1;
   margin-bottom: 20px;
+  text-align: center;
 }
 
 .divider {

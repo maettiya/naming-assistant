@@ -172,6 +172,8 @@ const bReset = document.getElementById('b-reset');
 const bValidation = document.getElementById('b-validation');
 const bSelectedTags = document.getElementById('b-selected-tags');
 const bDescriptorCloud = document.getElementById('b-descriptor-cloud');
+const bBpmReq = document.getElementById('b-bpm-req');
+const bKeyReq = document.getElementById('b-key-req');
 
 function builderBuildFilename() {
   const pack = sanitize(bPackName.value.trim());
@@ -368,11 +370,29 @@ function builderReset() {
   bValidation.innerHTML = '';
 }
 
+function builderUpdateFieldRequirements() {
+  const category = bCategory.value;
+  const instrument = bInstrument.value;
+  const isDrum = ['Drums', 'Cymbals', 'Percussion'].includes(instrument);
+
+  if (category === 'loop') {
+    bBpmReq.textContent = '*';
+    bBpmReq.className = 'req';
+    bKeyReq.textContent = isDrum ? 'OPTIONAL' : '*';
+    bKeyReq.className = isDrum ? 'opt' : 'req';
+  } else {
+    bBpmReq.textContent = 'OPTIONAL';
+    bBpmReq.className = 'opt';
+    bKeyReq.textContent = 'OPTIONAL';
+    bKeyReq.className = 'opt';
+  }
+}
+
 // Builder events
 bPackName.addEventListener('input', builderUpdateOutput);
 bOrigin.addEventListener('input', builderUpdateOutput);
-bInstrument.addEventListener('change', () => { builderUpdateDescriptors(); builderUpdateOutput(); });
-bCategory.addEventListener('change', builderUpdateOutput);
+bInstrument.addEventListener('change', () => { builderUpdateDescriptors(); builderUpdateFieldRequirements(); builderUpdateOutput(); });
+bCategory.addEventListener('change', () => { builderUpdateFieldRequirements(); builderUpdateOutput(); });
 bBpm.addEventListener('input', builderUpdateOutput);
 bKey.addEventListener('change', builderUpdateOutput);
 bCustomDesc.addEventListener('input', builderUpdateOutput);
@@ -821,17 +841,15 @@ function runValidation() {
   const input = validateInput.value.trim();
   if (!input) { validateResults.innerHTML = ''; return; }
 
-  const filename = input;
-  const base = filename.replace(/\.wav$/i, '');
+  const base = input.replace(/\.wav$/i, '');
   const parts = base.split('_');
   const checks = [];
 
-  checks.push({ ok: filename.toLowerCase().endsWith('.wav'), msg: '.wav extension present' });
   checks.push({ ok: parts.length >= 4, msg: parts.length >= 4 ? `Has ${parts.length} segments` : 'Too few segments — need at least: pack_origin_instrument_category' });
-  checks.push({ ok: !filename.includes('__'), msg: filename.includes('__') ? 'Double underscores found' : 'No double underscores' });
-  checks.push({ ok: !filename.includes(' '), msg: filename.includes(' ') ? 'Spaces found in filename' : 'No spaces in filename' });
+  checks.push({ ok: !base.includes('__'), msg: base.includes('__') ? 'Double underscores found' : 'No double underscores' });
+  checks.push({ ok: !base.includes(' '), msg: base.includes(' ') ? 'Spaces found in filename' : 'No spaces in filename' });
 
-  const invalidChars = filename.replace('.wav', '').match(/[^A-Za-z0-9!\-_.'()#]/g);
+  const invalidChars = base.match(/[^A-Za-z0-9!\-_.'()#]/g);
   checks.push({ ok: !invalidChars, msg: invalidChars ? `Invalid characters: ${[...new Set(invalidChars)].join(' ')}` : 'All characters valid' });
 
   let hasValidInstrument = false;

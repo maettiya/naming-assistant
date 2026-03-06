@@ -82,7 +82,7 @@
             </select>
           </div>
           <div class="field">
-            <label>TEMPO (BPM) <span class="opt">OPTIONAL</span></label>
+            <label>TEMPO (BPM) <span id="b-bpm-req" class="opt">OPTIONAL</span></label>
             <input type="number" id="b-bpm" placeholder="e.g. 120" min="40" max="300">
             <span class="hint">Numbers only — no "bpm" suffix</span>
           </div>
@@ -90,7 +90,7 @@
         <div class="divider"></div>
         <div class="grid-2">
           <div class="field">
-            <label>KEY <span class="opt">OPTIONAL</span></label>
+            <label>KEY <span id="b-key-req" class="opt">OPTIONAL</span></label>
             <select id="b-key">
               <option value="">— none —</option>
               <option>A</option><option>Am</option><option>A#</option><option>A#m</option>
@@ -192,7 +192,7 @@
             <input type="text" id="bulk-pack" placeholder="e.g. My Sample Pack">
           </div>
           <div class="field">
-            <label>ORIGIN <span class="req">*</span></label>
+            <label>ORIGIN (LABEL / PRODUCER) <span class="req">*</span></label>
             <input type="text" id="bulk-origin" placeholder="e.g. My Label">
           </div>
         </div>
@@ -217,7 +217,10 @@
         <p class="hint hint-block">Paste a filename to check it against Tracklib's submission guidelines.</p>
         <div class="field">
           <label>FILENAME TO VALIDATE</label>
-          <input type="text" id="validate-input" placeholder="MyPack_MyLabel_120_Synth_Loop_Am_warm_analog.wav">
+          <div class="input-with-suffix">
+            <input type="text" id="validate-input" placeholder="MyPack_MyLabel_120_Synth_Loop_Am_warm_analog">
+            <span class="input-suffix">.wav</span>
+          </div>
         </div>
         <div class="validation-list" id="validate-results"></div>
       </section>
