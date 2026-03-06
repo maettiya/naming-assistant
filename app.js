@@ -8,7 +8,7 @@
 
 const VALID_INSTRUMENTS = [
   'Drums', 'Cymbals', 'Percussion', 'Bass', 'Synth', 'Keys',
-  'Guitar', 'Strings', 'Brass', 'FX', 'Vocals', 'Woodwinds'
+  'Guitar', 'Strings', 'Brass', 'FX', 'Vocals', 'Woodwinds', 'Stack'
 ];
 
 const VALID_KEYS = [
@@ -21,7 +21,7 @@ const VALID_KEYS = [
 const DESCRIPTOR_DATA = {
   Drums: ['707', '808', '909', 'acoustic', 'break', 'clap', 'electric', 'fill', 'hi-hat', 'kick', 'linn', 'rim', 'roll', 'sidestick', 'snare', 'tom', 'top'],
   Cymbals: ['china', 'crash', 'gong', 'hi-hat', 'ride', 'splash'],
-  Percussion: ['agogo', 'bell', 'block', 'bongo', 'cabasa', 'cajon', 'castanet', 'chime', 'clap', 'clave', 'conga', 'cowbell', 'cuica', 'darbuka', 'doumbek', 'glockenspiel', 'gong', 'guiro', 'hangdrum', 'mallet', 'maraca', 'marimba', 'rainstick', 'shaker', 'snap', 'tabla', 'tambourine', 'timbale', 'timpani', 'triangle', 'vibraphone', 'woodblock', 'xylophone'],
+  Percussion: ['agogo', 'bell', 'block', 'bongo', 'cabasa', 'cajita', 'cajon', 'castanet', 'caxixi', 'chime', 'clap', 'clave', 'conga', 'cowbell', 'cuica', 'darbuka', 'doumbek', 'glockenspiel', 'gong', 'guiro', 'hangdrum', 'log-drum', 'mallet', 'maraca', 'marimba', 'ocean-drum', 'orchestral', 'rainstick', 'shaker', 'shekere', 'snap', 'tabla', 'tambourine', 'timbale', 'timpani', 'triangle', 'vibraphone', 'woodblock', 'xylophone', 'zabumba'],
   Bass: ['808', 'acoustic', 'electric', 'fretless', 'growl', 'hoover', 'reese', 'sub', 'synth', 'wobble'],
   Synth: ['additive', 'analog', 'arp', 'chord', 'hoover', 'juno', 'korg', 'lead', 'moog', 'pad', 'plucks', 'saw', 'sine', 'square', 'stabs', 'vocoder', 'wobble'],
   Keys: ['celeste', 'clavinet', 'electric-piano', 'hammond', 'harpsichord', 'mbira', 'melodica', 'organ', 'piano', 'rhodes', 'wurlitzer'],
@@ -30,13 +30,14 @@ const DESCRIPTOR_DATA = {
   Brass: ['horns', 'saxophone', 'trombone', 'trumpet'],
   FX: ['animal', 'atmosphere', 'downer', 'drone', 'electronic', 'field-recording', 'filtered', 'foley', 'impact', 'laser', 'mechanical', 'metallic', 'noise', 'reverse', 'riser', 'siren', 'soundscape', 'sweep', 'texture', 'transition', 'vinyl', 'water', 'wooden'],
   Vocals: ['acapella', 'breath', 'chant', 'choir', 'female', 'male', 'pitched', 'shout', 'spoken-word'],
-  Woodwinds: ['bassoon', 'clarinet', 'flugelhorn', 'flute', 'oboe', 'saxophone', 'shakuhachi']
+  Woodwinds: ['bassoon', 'clarinet', 'flugelhorn', 'flute', 'oboe', 'saxophone', 'shakuhachi'],
+  Stack: ['707', '808', '909', 'acapella', 'acoustic', 'additive', 'agogo', 'analog', 'animal', 'arp', 'atmosphere', 'bass', 'bassoon', 'bell', 'block', 'bongo', 'brass', 'break', 'breath', 'cabasa', 'cajita', 'cajon', 'castanet', 'caxixi', 'celeste', 'cello', 'chant', 'chime', 'china', 'choir', 'chord', 'clap', 'clarinet', 'clave', 'clavinet', 'clean', 'conga', 'cowbell', 'crash', 'cuica', 'cymbal', 'darbuka', 'distorted', 'doumbek', 'downer', 'drone', 'drum', 'electric', 'electric-piano', 'electronic', 'erhu', 'female', 'field-recording', 'fill', 'filtered', 'flugelhorn', 'flute', 'foley', 'fuzz', 'fx', 'glockenspiel', 'gong', 'guiro', 'guitar', 'hammond', 'hangdrum', 'harp', 'harpsichord', 'hi-hat', 'hoover', 'horns', 'impact', 'juno', 'keys', 'kick', 'korg', 'koto', 'laser', 'lead', 'linn', 'log-drum', 'male', 'mallet', 'maraca', 'marimba', 'mbira', 'mechanical', 'melodica', 'metallic', 'moog', 'noise', 'oboe', 'orchestral', 'organ', 'pads', 'percussion', 'piano', 'pitched', 'plucks', 'rainstick', 'reverse', 'rhodes', 'rhythm', 'ride', 'rim', 'riser', 'roll', 'saw', 'saxophone', 'shaker', 'shakuhachi', 'shekere', 'shout', 'sidestick', 'sine', 'siren', 'sitar', 'slide', 'snap', 'snare', 'soundscape', 'splash', 'spoken-word', 'square', 'stabs', 'strings', 'sweep', 'synth', 'tabla', 'tambourine', 'texture', 'timbale', 'timpani', 'tom', 'top', 'transition', 'triangle', 'trombone', 'trumpet', 'ukulele', 'vibraphone', 'vinyl', 'viola', 'violin', 'vocals', 'vocoder', 'wah', 'water', 'wobble', 'woodblock', 'wooden', 'woodwinds', 'wurlitzer', 'xylophone', 'zabumba', 'zither']
 };
 
 const UNIVERSAL_DESCRIPTORS = [
-  '8bit', 'analog', 'baritone', 'bitcrushed', 'bright', 'buildup', 'chord',
+  '8bit', 'alto', 'analog', 'baritone', 'bitcrushed', 'bright', 'buildup', 'chord',
   'clean', 'closed', 'dark', 'deep', 'dissonant', 'distorted', 'dry',
-  'ensemble', 'filtered', 'hard', 'high', 'hook', 'layered', 'lead', 'low',
+  'ensemble', 'filtered', 'fx', 'hard', 'high', 'hook', 'layered', 'lead', 'low',
   'melody', 'mid', 'open', 'orchestral', 'organic', 'pluck', 'rhythm',
   'riff', 'sidechained', 'soft', 'solo', 'soprano', 'stab', 'tonal', 'wet'
 ];
@@ -53,7 +54,8 @@ const INSTRUMENT_MAP = {
   'vox': 'Vocals', 'vocal': 'Vocals', 'vocals': 'Vocals', 'voc': 'Vocals',
   'fx': 'FX', 'sfx': 'FX', 'effect': 'FX',
   'perc': 'Percussion', 'percussion': 'Percussion', 'ride': 'Percussion',
-  'cymbal': 'Percussion', 'crash': 'Percussion'
+  'cymbal': 'Percussion', 'crash': 'Percussion',
+  'stack': 'Stack'
 };
 
 const ONESHOT_WORDS = ['kick', 'snare', 'hat', 'clap', 'rim', 'tom', 'crash', 'ride', 'cymbal', 'snap', 'cowbell', 'shaker'];
@@ -295,7 +297,7 @@ function builderUpdateDescriptors() {
   // Universal (skip duplicates)
   const uniLabel = document.createElement('div');
   uniLabel.className = 'chip-group-label';
-  uniLabel.textContent = 'Universal';
+  uniLabel.textContent = 'Universal Descriptors';
   bDescriptorCloud.appendChild(uniLabel);
 
   UNIVERSAL_DESCRIPTORS.forEach(tag => {
@@ -564,7 +566,7 @@ function fdBuildDescriptorChips(fileState, container) {
 
   const uniLabel = document.createElement('div');
   uniLabel.className = 'chip-group-label';
-  uniLabel.textContent = 'Universal';
+  uniLabel.textContent = 'Universal Descriptors';
   container.appendChild(uniLabel);
 
   for (const tag of UNIVERSAL_DESCRIPTORS) {
@@ -836,6 +838,8 @@ bulkCopy.addEventListener('click', () => {
 
 const validateInput = document.getElementById('validate-input');
 const validateResults = document.getElementById('validate-results');
+const validateCopyRow = document.getElementById('validate-copy-row');
+const validateCopyBtn = document.getElementById('validate-copy');
 
 function runValidation() {
   const input = validateInput.value.trim();
@@ -867,9 +871,20 @@ function runValidation() {
     checks.push({ ok: hasBpm, msg: hasBpm ? 'BPM found for loop' : 'Loop files require a BPM value' });
   }
 
+  const allPassed = checks.every(c => c.ok);
+
   validateResults.innerHTML = checks.map(c =>
     `<div class="validation-item ${c.ok ? 'ok' : 'err'}"><span class="icon">${c.ok ? '✓' : '✗'}</span>${c.msg}</div>`
   ).join('');
+
+  validateCopyRow.hidden = !allPassed;
 }
 
 validateInput.addEventListener('input', runValidation);
+validateCopyBtn.addEventListener('click', () => {
+  const base = validateInput.value.trim().replace(/\.wav$/i, '');
+  navigator.clipboard.writeText(base).then(() => {
+    validateCopyBtn.textContent = 'COPIED';
+    setTimeout(() => { validateCopyBtn.textContent = 'COPY FILENAME'; }, 1500);
+  });
+});

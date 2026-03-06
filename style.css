@@ -551,6 +551,12 @@ main {
   gap: 10px;
   flex-wrap: wrap;
   margin-top: 20px;
+  justify-content: center;
+}
+
+.btn-row .btn {
+  font-size: 20px;
+  padding: 12px 28px;
 }
 
 /* ---- COPY BUTTON ---- */
