@@ -791,50 +791,39 @@ const bulkInput = document.getElementById('bulk-input');
 const bulkResults = document.getElementById('bulk-results');
 const bulkClear = document.getElementById('bulk-clear');
 
+let bulkFiles = [];
+let bulkIdCounter = 0;
+
 function runBulk() {
   const lines = bulkInput.value.trim().split('\n').filter(Boolean);
-  const pack = bulkPack.value.trim();
-  const origin = bulkOrigin.value.trim();
 
-  if (!lines.length) { bulkResults.innerHTML = ''; return; }
+  if (!lines.length) { bulkResults.innerHTML = ''; bulkFiles = []; return; }
 
-  bulkResults.innerHTML = lines.map(line => {
+  bulkFiles = lines.map(line => {
     const original = line.trim();
-    const renamed = bulkAttemptRename(original, pack, origin);
-    const hasError = renamed.startsWith('⚠');
-    return `<div class="bulk-row ${hasError ? 'has-error' : ''}">
-      <div class="original">${original}</div>
-      <div class="arrow">→</div>
-      <div class="renamed ${hasError ? 'error' : ''}">${renamed}</div>
-      ${hasError ? '' : '<button type="button" class="btn-copy bulk-copy-btn">COPY</button>'}
-    </div>`;
-  }).join('');
-
-  bulkResults.querySelectorAll('.bulk-copy-btn').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const renamed = btn.closest('.bulk-row').querySelector('.renamed').textContent.replace(/\.wav$/, '');
-      navigator.clipboard.writeText(renamed).then(() => {
-        btn.textContent = 'COPIED';
-        btn.classList.add('copied');
-        setTimeout(() => { btn.textContent = 'COPY'; btn.classList.remove('copied'); }, 1500);
-      });
-    });
+    const parsed = bulkParse(original);
+    const existing = bulkFiles.find(f => f.original === original);
+    return {
+      id: existing ? existing.id : bulkIdCounter++,
+      original,
+      ...parsed,
+      descriptors: existing ? existing.descriptors : [],
+      expanded: existing ? existing.expanded : false
+    };
   });
+
+  bulkRenderAll();
 }
 
-function bulkAttemptRename(filename, pack, origin) {
-  if (!pack || !origin) return '⚠ Set pack name and origin above';
-
+function bulkParse(filename) {
   const base = filename.replace(/\.wav$/i, '');
   const tokens = base.split(/[\s_]+/).map(t => t.toLowerCase().trim()).filter(Boolean);
 
-  // Category
   let category = '';
   if (tokens.some(t => t.includes('loop'))) category = 'loop';
   else if (tokens.some(t => ['one-shot', 'oneshot', 'shot'].includes(t))) category = 'one-shot';
   else if (tokens.some(t => ONESHOT_WORDS.includes(t))) category = 'one-shot';
 
-  // BPM
   let bpm = '';
   const bpmMatch = base.match(/\b(\d{2,3})(?:bpm)?\b/i);
   if (bpmMatch) {
@@ -842,15 +831,11 @@ function bulkAttemptRename(filename, pack, origin) {
     if (n >= 40 && n <= 300) bpm = String(n);
   }
 
-  // Instrument
   let instrument = '';
   for (const token of tokens) {
-    if (INSTRUMENT_MAP[token]) { instrument = INSTRUMENT_MAP[token].toLowerCase(); break; }
+    if (INSTRUMENT_MAP[token]) { instrument = INSTRUMENT_MAP[token]; break; }
   }
-  if (!instrument) return '⚠ Could not detect instrument — rename manually';
-  if (!category) return '⚠ Could not detect category (loop/one-shot) — rename manually';
 
-  // Key
   let key = '';
   const keyMatch = base.match(/\b([A-Ga-g][#b]?m?)\b/);
   if (keyMatch) {
@@ -858,19 +843,264 @@ function bulkAttemptRename(filename, pack, origin) {
     if (VALID_KEYS.includes(candidate)) key = candidate;
   }
 
+  return { instrument, category, bpm, key };
+}
+
+function bulkGenerateFilename(file) {
+  const pack = bulkPack.value.trim();
+  const origin = bulkOrigin.value.trim();
+  if (!pack || !origin) return null;
+  if (!file.instrument || !file.category) return null;
+
   const parts = [sanitize(pack), sanitize(origin)];
-  if (bpm) parts.push(bpm);
-  parts.push(instrument);
-  parts.push(category);
-  if (key) parts.push(key);
+  if (file.bpm) parts.push(file.bpm);
+  parts.push(file.instrument.toLowerCase());
+  parts.push(file.category);
+  if (file.key) parts.push(file.key);
+  if (file.descriptors.length > 0) parts.push(file.descriptors.join('-'));
 
   return parts.join('_') + '.wav';
+}
+
+function bulkGetWarnings(file) {
+  const warnings = [];
+  const pack = bulkPack.value.trim();
+  const origin = bulkOrigin.value.trim();
+  if (!pack || !origin) return ['Set pack name and origin above'];
+  if (!file.instrument) warnings.push('Missing instrument');
+  if (!file.category) warnings.push('Missing category');
+  if (file.category === 'loop' && !file.bpm) warnings.push('Missing BPM (required for loops)');
+  if (file.descriptors.length === 0) warnings.push('Missing descriptors');
+  return warnings;
+}
+
+function bulkUpdateRow(file) {
+  const row = document.getElementById(`bulk-${file.id}`);
+  if (!row) return;
+  const warnings = bulkGetWarnings(file);
+  const filename = bulkGenerateFilename(file);
+  const hasError = !filename;
+  const hasWarnings = warnings.length > 0;
+
+  row.className = `bulk-row ${hasError ? 'has-error' : ''} ${hasWarnings ? 'has-warnings' : ''}`;
+
+  const renamedEl = row.querySelector('.renamed');
+  renamedEl.textContent = filename || (hasError && warnings[0] ? `⚠ ${warnings[0]}` : '⚠ Incomplete');
+  renamedEl.classList.toggle('error', hasError);
+
+  let warningsEl = row.querySelector('.bulk-warnings');
+  if (hasWarnings) {
+    const html = warnings.map(w => `<span class="bulk-warning">⚠ ${w}</span>`).join('');
+    if (warningsEl) {
+      warningsEl.innerHTML = html;
+    } else {
+      warningsEl = document.createElement('div');
+      warningsEl.className = 'bulk-warnings';
+      warningsEl.innerHTML = html;
+      row.querySelector('.bulk-row-top').after(warningsEl);
+    }
+  } else if (warningsEl) {
+    warningsEl.remove();
+  }
+
+  let copyBtn = row.querySelector('.bulk-copy-btn');
+  if (!hasError && !copyBtn) {
+    copyBtn = document.createElement('button');
+    copyBtn.type = 'button';
+    copyBtn.className = 'btn-copy bulk-copy-btn';
+    copyBtn.textContent = 'COPY';
+    row.querySelector('.bulk-expand-btn').before(copyBtn);
+    copyBtn.addEventListener('click', () => {
+      const name = bulkGenerateFilename(file).replace(/\.wav$/, '');
+      navigator.clipboard.writeText(name).then(() => {
+        copyBtn.textContent = 'COPIED';
+        copyBtn.classList.add('copied');
+        setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1500);
+      });
+    });
+  } else if (hasError && copyBtn) {
+    copyBtn.remove();
+  }
+}
+
+function bulkRenderAll() {
+
+  bulkResults.innerHTML = '';
+
+  for (const file of bulkFiles) {
+    const warnings = bulkGetWarnings(file);
+    const filename = bulkGenerateFilename(file);
+    const hasError = !filename;
+    const hasWarnings = warnings.length > 0;
+
+    const row = document.createElement('div');
+    row.className = `bulk-row ${hasError ? 'has-error' : ''} ${hasWarnings ? 'has-warnings' : ''}`;
+    row.id = `bulk-${file.id}`;
+
+    const warningsHtml = hasWarnings
+      ? `<div class="bulk-warnings">${warnings.map(w => `<span class="bulk-warning">⚠ ${w}</span>`).join('')}</div>`
+      : '';
+
+    const displayName = filename || (hasError && warnings[0] ? `⚠ ${warnings[0]}` : '⚠ Incomplete');
+
+    const instrumentOptions = VALID_INSTRUMENTS.map(i =>
+      `<option value="${i}" ${file.instrument === i ? 'selected' : ''}>${i}</option>`
+    ).join('');
+
+    const keyOptions = VALID_KEYS.map(k =>
+      `<option value="${k}" ${file.key === k ? 'selected' : ''}>${k}</option>`
+    ).join('');
+
+    row.innerHTML = `
+      <div class="bulk-row-top">
+        <div class="original">${file.original}</div>
+        <div class="arrow">→</div>
+        <div class="renamed ${hasError ? 'error' : ''}">${displayName}</div>
+        ${!hasError ? '<button type="button" class="btn-copy bulk-copy-btn">COPY</button>' : ''}
+        <button type="button" class="bulk-expand-btn" title="Edit fields">${file.expanded ? '▲' : '▼'}</button>
+      </div>
+      ${warningsHtml}
+      <div class="bulk-editor" ${file.expanded ? '' : 'hidden'}>
+        <div class="bulk-editor-fields">
+          <div class="field">
+            <label>INSTRUMENT</label>
+            <select class="bulk-input-instrument">
+              <option value="">—</option>
+              ${instrumentOptions}
+            </select>
+          </div>
+          <div class="field">
+            <label>CATEGORY</label>
+            <select class="bulk-input-category">
+              <option value="" ${!file.category ? 'selected' : ''}>—</option>
+              <option value="loop" ${file.category === 'loop' ? 'selected' : ''}>Loop</option>
+              <option value="one-shot" ${file.category === 'one-shot' ? 'selected' : ''}>One-Shot</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>BPM</label>
+            <input type="number" class="bulk-input-bpm" min="40" max="300" value="${file.bpm}" placeholder="—">
+          </div>
+          <div class="field">
+            <label>KEY</label>
+            <select class="bulk-input-key">
+              <option value="">—</option>
+              ${keyOptions}
+            </select>
+          </div>
+        </div>
+        <div class="bulk-editor-descriptors">
+          <label>DESCRIPTORS</label>
+          <div class="chip-group" id="bulk-chips-${file.id}"></div>
+        </div>
+      </div>
+    `;
+
+    const expandBtn = row.querySelector('.bulk-expand-btn');
+    const editorArea = row.querySelector('.bulk-editor');
+    const chipsContainer = row.querySelector(`#bulk-chips-${file.id}`);
+
+    // Field event listeners
+    const instrumentSelect = row.querySelector('.bulk-input-instrument');
+    const categorySelect = row.querySelector('.bulk-input-category');
+    const bpmInput = row.querySelector('.bulk-input-bpm');
+    const keySelect = row.querySelector('.bulk-input-key');
+
+    instrumentSelect.addEventListener('change', () => {
+      file.instrument = instrumentSelect.value;
+      const validTags = getValidDescriptors(file.instrument);
+      file.descriptors = file.descriptors.filter(d => validTags.includes(d));
+      bulkRenderAll();
+    });
+
+    categorySelect.addEventListener('change', () => {
+      file.category = categorySelect.value;
+      bulkRenderAll();
+    });
+
+    bpmInput.addEventListener('input', () => {
+      file.bpm = bpmInput.value;
+      bulkUpdateRow(file);
+    });
+
+    keySelect.addEventListener('change', () => {
+      file.key = keySelect.value;
+      bulkRenderAll();
+    });
+
+    expandBtn.addEventListener('click', () => {
+      file.expanded = !file.expanded;
+      editorArea.hidden = !file.expanded;
+      expandBtn.textContent = file.expanded ? '▲' : '▼';
+    });
+
+    if (file.instrument) {
+      bulkBuildChips(file, chipsContainer);
+    }
+
+    const copyBtn = row.querySelector('.bulk-copy-btn');
+    if (copyBtn) {
+      copyBtn.addEventListener('click', () => {
+        const name = filename.replace(/\.wav$/, '');
+        navigator.clipboard.writeText(name).then(() => {
+          copyBtn.textContent = 'COPIED';
+          copyBtn.classList.add('copied');
+          setTimeout(() => { copyBtn.textContent = 'COPY'; copyBtn.classList.remove('copied'); }, 1500);
+        });
+      });
+    }
+
+    bulkResults.appendChild(row);
+  }
+}
+
+function bulkBuildChips(file, container) {
+  container.innerHTML = '';
+  const instrumentKey = file.instrument;
+  const instrumentTags = DESCRIPTOR_DATA[instrumentKey] || [];
+
+  if (instrumentTags.length > 0) {
+    const label = document.createElement('span');
+    label.className = 'chip-group-label';
+    label.textContent = instrumentKey;
+    container.appendChild(label);
+  }
+
+  for (const tag of instrumentTags) {
+    container.appendChild(bulkCreateChip(file, tag));
+  }
+
+  const uniLabel = document.createElement('span');
+  uniLabel.className = 'chip-group-label';
+  uniLabel.textContent = 'Universal Descriptors';
+  container.appendChild(uniLabel);
+
+  for (const tag of UNIVERSAL_DESCRIPTORS) {
+    if (instrumentTags.includes(tag)) continue;
+    container.appendChild(bulkCreateChip(file, tag));
+  }
+}
+
+function bulkCreateChip(file, tag) {
+  const chip = document.createElement('button');
+  chip.type = 'button';
+  chip.className = 'chip';
+  chip.textContent = tag;
+  if (file.descriptors.includes(tag)) chip.classList.add('selected');
+  chip.addEventListener('click', () => {
+    const idx = file.descriptors.indexOf(tag);
+    if (idx === -1) file.descriptors.push(tag);
+    else file.descriptors.splice(idx, 1);
+    chip.classList.toggle('selected');
+    bulkRenderAll();
+  });
+  return chip;
 }
 
 bulkPack.addEventListener('input', runBulk);
 bulkOrigin.addEventListener('input', runBulk);
 bulkInput.addEventListener('input', runBulk);
-bulkClear.addEventListener('click', () => { bulkInput.value = ''; bulkResults.innerHTML = ''; });
+bulkClear.addEventListener('click', () => { bulkInput.value = ''; bulkResults.innerHTML = ''; bulkFiles = []; });
 
 
 // ============================================================

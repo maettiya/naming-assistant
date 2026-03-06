@@ -15,6 +15,7 @@
   --accent: #FF6B2B;
   --red: #FF3B3B;
   --green: #4ADE80;
+  --yellow: #FBBF24;
   --amber: #FBBF24;
   --font-heading: 'Bebas Neue', sans-serif;
   --font-mono: 'DM Mono', monospace;
@@ -806,16 +807,19 @@ main {
 }
 
 .bulk-row {
-  display: grid;
-  grid-template-columns: 1fr 20px 1fr auto;
-  gap: 8px;
-  align-items: center;
-  padding: 10px 12px;
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: 4px;
-  font-family: var(--font-mono);
-  font-size: 11px;
+  font-family: var(--font-body);
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+.bulk-row-top {
+  display: grid;
+  grid-template-columns: 1fr 20px 1fr auto auto;
+  gap: 8px;
+  align-items: center;
 }
 
 .bulk-row .original {
@@ -841,6 +845,57 @@ main {
   color: var(--red);
 }
 
+.bulk-warnings {
+  grid-column: 1 / -1;
+  padding-top: 6px;
+}
+
+.bulk-warning {
+  display: inline-block;
+  font-size: 11px;
+  color: var(--yellow);
+  margin-right: 12px;
+  font-family: var(--font-mono);
+}
+
+.bulk-expand-btn {
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--dim);
+  border-radius: 3px;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 10px;
+  transition: color 0.15s, border-color 0.15s;
+}
+.bulk-expand-btn:hover {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.bulk-editor {
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  margin-top: 10px;
+}
+
+.bulk-editor-fields {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.bulk-editor-descriptors label {
+  display: block;
+  font-size: 10px;
+  font-family: var(--font-mono);
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--dim);
+  margin-bottom: 6px;
+}
+
 .bulk-copy-btn {
   padding: 4px 12px;
   font-size: 10px;
@@ -863,6 +918,10 @@ main {
   background: var(--green);
   border-color: var(--green);
   color: var(--bg);
+}
+
+.bulk-row.has-warnings:not(.has-error) {
+  border-color: var(--yellow);
 }
 
 /* ---- COMPLIANCE BAR ---- */
